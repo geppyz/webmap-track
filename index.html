@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="nl">
+    <head>
+        <meta charset="UTF-8">
+        <title>Leaflet Test Map</title>
+        <!-- Leaflet CSS (Bij Leaflet altijd eerst CSS laden) -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="crossorigin=""/>
+        <!-- Leaflet JS (Bij Leaflet altijd als tweede pas JS laden) -->
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="crossorigin=""></script>
+        <style>
+            body {
+                padding: 0;
+                margin: 0;
+            }
+            html, body, #map {
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Div om kaart materiaal in te laden -->
+        <div id="map"></div>
+        <!-- Javascript code om kaart te maken -->
+        <script>
+            // Achtergrond lagen
+            var backgroundLayerGrijs = L.tileLayer('https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/EPSG:3857/{z}/{x}/{y}.png', {
+                attribution: '<a href="https://creativecommons.org/licenses/by/3.0/nl/">CC BY 3.0</a> Kadaster', // Attributie van kaartmateriaal
+                maxZoom: 19, // Maximale zoom niveau van deze getegelde kaart service
+                minZoom: 6, // Minimale zoom niveau van deze getegelde kaart service
+                tileSize: 256, // Grootte van de tegels die opgehaald worden
+                zoomOffset: 0 // Zoom offset (meestal 0)
+            });
+            var backgroundLayerPastel = L.tileLayer('https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/pastel/EPSG:3857/{z}/{x}/{y}.png', {
+                attribution: '<a href="https://creativecommons.org/licenses/by/3.0/nl/">CC BY 3.0</a> Kadaster', // Attributie van kaartmateriaal
+                maxZoom: 19, // Maximale zoom niveau van deze getegelde kaart service
+                minZoom: 6, // Minimale zoom niveau van deze getegelde kaart service
+                tileSize: 256, // Grootte van de tegels die opgehaald worden
+                zoomOffset: 0 // Zoom offset (meestal 0)
+            });
+            var backgroundLayer = L.tileLayer('https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png', {
+                attribution: '<a href="https://creativecommons.org/licenses/by/3.0/nl/">CC BY 3.0</a> Kadaster', // Attributie van kaartmateriaal
+                maxZoom: 19, // Maximale zoom niveau van deze getegelde kaart service
+                minZoom: 6, // Minimale zoom niveau van deze getegelde kaart service
+                tileSize: 256, // Grootte van de tegels die opgehaald worden
+                zoomOffset: 0 // Zoom offset (meestal 0)
+            });
+            var luchtfotoLayer = L.tileLayer('https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_ortho25/EPSG:3857/{z}/{x}/{y}.jpeg', {
+                attribution: '<a href="https://creativecommons.org/licenses/by/4.0/deed.nl">CC BY 4.0</a> Kadaster',
+                maxZoom: 19,
+                minZoom: 6,
+                tileSize: 256,
+                zoomOffset: 0
+            });
+
+            // Voorgrond lagen
+            var landsgrens = L.tileLayer.wms("https://geodata.nationaalgeoregister.nl/bestuurlijkegrenzen/wms?", {
+                    layers: 'landsgrens',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: '<a href="https://creativecommons.org/publicdomain/zero/1.0/deed.nl">CC0 1.0</a> PDOK'
+                }
+            );
+            var provincies = L.tileLayer.wms("https://geodata.nationaalgeoregister.nl/bestuurlijkegrenzen/wms?", {
+                    layers: 'provincies',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: '<a href="https://creativecommons.org/publicdomain/zero/1.0/deed.nl">CC0 1.0</a> PDOK'
+                }
+            );
+            var gemeenten = L.tileLayer.wms("https://geodata.nationaalgeoregister.nl/bestuurlijkegrenzen/wms?", {
+                    layers: 'gemeenten',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: '<a href="https://creativecommons.org/publicdomain/zero/1.0/deed.nl">CC0 1.0</a> PDOK'
+                }
+            );
+            var woonplaatsgrenzen = L.tileLayer.wms("https://geodata.nationaalgeoregister.nl/bag/wms/v1_1?", {
+                    layers: 'woonplaats',
+                    format: 'image/png',
+                    transparent: true,
+                    attribution: '<a href="https://creativecommons.org/publicdomain/zero/1.0/deed.nl">CC0 1.0</a> PDOK'
+                }
+            );
+
+            // Kaart aanmaken
+            var mymap = L.map('map', {
+                center: [51.981020, 5.900520], // Coordinaten van het startpunt van de kaart
+                zoom: 12, // Zoomniveau van het startpunt van de kaart
+                layers: [backgroundLayer] // Ingeschakelde kaartlagen
+            });
+
+            // Geolocatie volgen
+            const markerIcon = L.icon({
+                iconUrl: `https://api.geoapify.com/v1/icon/?type=circle&color=red&icon=car&iconType=awesome&noWhiteCircle&scaleFactor=2&apiKey=a8c3e0a520914fd1afec326067ef69b8`,
+                iconSize: [31, 31], // size of the icon
+                iconAnchor: [15.5, 31], // point of the icon which will correspond to marker's location
+                popupAnchor: [0, -45] // point from which the popup should open relative to the iconAnchor
+            });
+
+            var marker;
+            this.mymap.locate({
+                watch: true,
+                setView: true
+            }).on('locationfound', (e) => {
+                if (!this.marker) {
+                    this.marker = L.marker([e.latitude, e.longitude], {icon: markerIcon}).addTo(this.mymap);
+                } else {
+                    this.marker.setLatLng([e.latitude, e.longitude]);
+                }
+            });
+
+            // Kaartlagen controls aanmaken
+            var baseMaps = {
+                "BRT Achtergrondkaart": backgroundLayer,
+                "BRT Achtergrondkaart Grijs": backgroundLayerGrijs,
+                "BRT Achtergrondkaart Pastel": backgroundLayerPastel,
+                "PDOK Luchtfoto": luchtfotoLayer
+            };
+            var overlayMaps = {
+                "landsgrens": landsgrens,
+                "provincies": provincies,
+                "gemeenten": gemeenten,
+                "woonplaatsgrenzen": woonplaatsgrenzen
+            };
+
+            // Voeg laag control toe aan kaart object
+            L.control.layers(baseMaps, overlayMaps).addTo(mymap);
+
+            // Voeg een schaal control toe aan kaart object
+            L.control.scale().addTo(mymap);
+        </script>
+    </body>
+</html>
