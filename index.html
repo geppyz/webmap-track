@@ -16,6 +16,21 @@
                 height: 100%;
                 width: 100%;
             }
+            .leaflet-touch .leaflet-bar a {
+                width: 60px;
+                height: 60px;
+                line-height: 60px;
+            }
+            .leaflet-touch .leaflet-control-layers-toggle {
+                width: 60px;
+                height: 60px;
+            }
+            .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out {
+                font-size: 33px;
+            }
+            .leaflet-control-layers label {
+                font-size: 22px;
+            }
         </style>
     </head>
     <body>
@@ -113,7 +128,7 @@
             };
 
             // Voeg laag control toe aan kaart object
-            L.control.layers(baseMaps, overlayMaps).addTo(mymap);
+            L.control.layers(baseMaps, overlayMaps, {position: 'topleft'}).addTo(mymap);
 
             // Voeg een schaal control toe aan kaart object
             L.control.scale().addTo(mymap);
