@@ -2,11 +2,11 @@
 <html lang="nl">
     <head>
         <meta charset="UTF-8">
-        <title>Leaflet Test Map</title>
+        <title>GeppyZ Car Map</title>
         <!-- Leaflet CSS (Bij Leaflet altijd eerst CSS laden) -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="crossorigin=""/>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" crossorigin=""/>
         <!-- Leaflet JS (Bij Leaflet altijd als tweede pas JS laden) -->
-        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="crossorigin=""></script>
+        <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" crossorigin=""></script>
         <style>
             body {
                 padding: 0;
@@ -94,20 +94,8 @@
             const markerIcon = L.icon({
                 iconUrl: `https://api.geoapify.com/v1/icon/?type=circle&color=red&icon=car&iconType=awesome&noWhiteCircle&scaleFactor=2&apiKey=a8c3e0a520914fd1afec326067ef69b8`,
                 iconSize: [31, 31], // size of the icon
-                iconAnchor: [15.5, 31], // point of the icon which will correspond to marker's location
+                iconAnchor: [15.5, 15.5], // point of the icon which will correspond to marker's location
                 popupAnchor: [0, -45] // point from which the popup should open relative to the iconAnchor
-            });
-
-            var marker;
-            this.mymap.locate({
-                watch: true,
-                setView: true
-            }).on('locationfound', (e) => {
-                if (!this.marker) {
-                    this.marker = L.marker([e.latitude, e.longitude], {icon: markerIcon}).addTo(this.mymap);
-                } else {
-                    this.marker.setLatLng([e.latitude, e.longitude]);
-                }
             });
 
             // Kaartlagen controls aanmaken
@@ -129,6 +117,35 @@
 
             // Voeg een schaal control toe aan kaart object
             L.control.scale().addTo(mymap);
+
+            let current_position, current_accuracy;
+
+            navigator.geolocation.watchPosition(onLocationFound, onLocationError, {
+                maximumAge: 1000,
+                timeout: 2000
+            });
+
+            function onLocationFound(e) {
+                // if position defined, then remove the existing position marker and accuracy circle from the map
+                console.log("location found");
+                console.log(e);
+                if (current_position) {
+                    this.mymap.removeLayer(current_position);
+                    this.mymap.removeLayer(current_accuracy);
+                }
+                var radius = e.coords.accuracy / 10;
+                const latlng = {
+                    lat: e.coords.latitude,
+                    lng: e.coords.longitude
+                };
+                current_position = L.marker(latlng, {icon: markerIcon}).addTo(this.mymap);
+                current_accuracy = L.circle(latlng, radius).addTo(this.mymap);
+                this.mymap.setView(latlng);
+            }
+
+            function onLocationError(e) {
+                console.error("Location found error");
+            }
         </script>
     </body>
 </html>
