@@ -69,22 +69,15 @@
             });
 
             // Voorgrond lagen
-            var landsgrens = L.tileLayer.wms("https://geodata.nationaalgeoregister.nl/bestuurlijkegrenzen/wms?", {
-                    layers: 'landsgrens',
+            var weggegmaximumsnelheden = L.tileLayer.wms("https://geodata.nationaalgeoregister.nl/weggeg/wms?", {
+                    layers: 'weggegmaximumsnelheden',
                     format: 'image/png',
                     transparent: true,
                     attribution: '<a href="https://creativecommons.org/publicdomain/zero/1.0/deed.nl">CC0 1.0</a> PDOK'
                 }
             );
-            var provincies = L.tileLayer.wms("https://geodata.nationaalgeoregister.nl/bestuurlijkegrenzen/wms?", {
-                    layers: 'provincies',
-                    format: 'image/png',
-                    transparent: true,
-                    attribution: '<a href="https://creativecommons.org/publicdomain/zero/1.0/deed.nl">CC0 1.0</a> PDOK'
-                }
-            );
-            var gemeenten = L.tileLayer.wms("https://geodata.nationaalgeoregister.nl/bestuurlijkegrenzen/wms?", {
-                    layers: 'gemeenten',
+            let hectometerpunten = L.tileLayer.wms("https://geodata.nationaalgeoregister.nl/nwbwegen/wms?", {
+                    layers: 'hectopunten',
                     format: 'image/png',
                     transparent: true,
                     attribution: '<a href="https://creativecommons.org/publicdomain/zero/1.0/deed.nl">CC0 1.0</a> PDOK'
@@ -101,7 +94,7 @@
             // Kaart aanmaken
             var mymap = L.map('map', {
                 center: [51.981020, 5.900520], // Coordinaten van het startpunt van de kaart
-                zoom: 12, // Zoomniveau van het startpunt van de kaart
+                zoom: 14, // Zoomniveau van het startpunt van de kaart
                 layers: [backgroundLayer] // Ingeschakelde kaartlagen
             });
 
@@ -121,10 +114,9 @@
                 "PDOK Luchtfoto": luchtfotoLayer
             };
             var overlayMaps = {
-                "landsgrens": landsgrens,
-                "provincies": provincies,
-                "gemeenten": gemeenten,
-                "woonplaatsgrenzen": woonplaatsgrenzen
+                "Maximumsnelheden": weggegmaximumsnelheden,
+                "Hectometerpunten": hectometerpunten,
+                "Woonplaatsgrenzen": woonplaatsgrenzen
             };
 
             // Voeg laag control toe aan kaart object
