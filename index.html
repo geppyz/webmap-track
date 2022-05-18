@@ -149,7 +149,7 @@
                 };
                 current_position = L.marker(latlng, {icon: markerIcon}).addTo(this.mymap);
                 current_accuracy = L.circle(latlng, radius).addTo(this.mymap);
-                this.mymap.setView(latlng);
+                this.mymap.flyTo(latlng);
             }
 
             function onLocationError(e) {
