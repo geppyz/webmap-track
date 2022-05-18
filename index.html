@@ -91,6 +91,18 @@
                     attribution: '<a href="https://creativecommons.org/publicdomain/zero/1.0/deed.nl">CC0 1.0</a> PDOK'
                 }
             );
+            var tomTomTraffic = L.tileLayer('https://api.tomtom.com/traffic/map/4/tile/flow/relative0/{z}/{x}/{y}.png?&key=qS7bqKtSIgcZz6gha0jCnX0mpqCyzvgQ', {
+                tileSize: 256,
+                transparent: true,
+                attribution: 'TomTom',
+                zoomOffset: 0
+            });
+            var tomTomIncidents = L.tileLayer('https://api.tomtom.com/traffic/map/4/tile/incidents/s0/{z}/{x}/{y}.png?t=-1&key=qS7bqKtSIgcZz6gha0jCnX0mpqCyzvgQ', {
+                tileSize: 256,
+                transparent: true,
+                attribution: 'TomTom',
+                zoomOffset: 0
+            })
 
             // Kaart aanmaken
             var mymap = L.map('map', {
@@ -117,7 +129,9 @@
             var overlayMaps = {
                 "Maximumsnelheden": weggegmaximumsnelheden,
                 "Hectometerpunten": hectometerpunten,
-                "Woonplaatsgrenzen": woonplaatsgrenzen
+                "Woonplaatsgrenzen": woonplaatsgrenzen,
+                "TomTom Traffic": tomTomTraffic,
+                "TomTom Incidents": tomTomIncidents
             };
 
             // Voeg laag control toe aan kaart object
