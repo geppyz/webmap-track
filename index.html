@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>GeppyZ Car Map</title>
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
         <!-- Leaflet CSS (Bij Leaflet altijd eerst CSS laden) -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" crossorigin=""/>
         <!-- Leaflet JS (Bij Leaflet altijd als tweede pas JS laden) -->
@@ -94,7 +95,7 @@
             // Kaart aanmaken
             var mymap = L.map('map', {
                 center: [51.981020, 5.900520], // Coordinaten van het startpunt van de kaart
-                zoom: 14, // Zoomniveau van het startpunt van de kaart
+                zoom: 16, // Zoomniveau van het startpunt van de kaart
                 layers: [backgroundLayer] // Ingeschakelde kaartlagen
             });
 
@@ -128,8 +129,9 @@
             let current_position, current_accuracy;
 
             navigator.geolocation.watchPosition(onLocationFound, onLocationError, {
-                maximumAge: 1000,
-                timeout: 2000
+                enableHighAccuracy: true,
+                maximumAge: 0,
+                timeout: 1000
             });
 
             function onLocationFound(e) {
