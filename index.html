@@ -5,9 +5,9 @@
         <title>GeppyZ Car Map</title>
         <link rel="icon" type="image/x-icon" href="favicon.ico">
         <!-- Leaflet CSS (Bij Leaflet altijd eerst CSS laden) -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" crossorigin=""/>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" crossorigin=""/>
         <!-- Leaflet JS (Bij Leaflet altijd als tweede pas JS laden) -->
-        <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" crossorigin=""></script>
+        <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" crossorigin=""></script>
         <style>
             body {
                 padding: 0;
@@ -70,21 +70,21 @@
             });
 
             // Voorgrond lagen
-            var weggegmaximumsnelheden = L.tileLayer.wms("https://geodata.nationaalgeoregister.nl/weggeg/wms?", {
-                    layers: 'weggegmaximumsnelheden',
+            var weggegmaximumsnelheden = L.tileLayer.wms("https://service.pdok.nl/rws/weggeg/wms/v1_0?", {
+                    layers: 'WegvakMaxSnelheden',
                     format: 'image/png',
                     transparent: true,
                     attribution: '<a href="https://creativecommons.org/publicdomain/zero/1.0/deed.nl">CC0 1.0</a> PDOK'
                 }
             );
-            let hectometerpunten = L.tileLayer.wms("https://geodata.nationaalgeoregister.nl/nwbwegen/wms?", {
-                    layers: 'hectopunten',
+            let hectometerpunten = L.tileLayer.wms("https://service.pdok.nl/rws/nwbwegen/wms/v1_0?", {
+                    layers: 'GeodataHectopunten',
                     format: 'image/png',
                     transparent: true,
                     attribution: '<a href="https://creativecommons.org/publicdomain/zero/1.0/deed.nl">CC0 1.0</a> PDOK'
                 }
             );
-            var woonplaatsgrenzen = L.tileLayer.wms("https://geodata.nationaalgeoregister.nl/bag/wms/v1_1?", {
+            var woonplaatsgrenzen = L.tileLayer.wms("https://service.pdok.nl/lv/bag/wms/v2_0?", {
                     layers: 'woonplaats',
                     format: 'image/png',
                     transparent: true,
